@@ -1,4 +1,4 @@
-# The error handlers are stored here
+# error handlers are stored here
 from flask import render_template
 from . import main
 

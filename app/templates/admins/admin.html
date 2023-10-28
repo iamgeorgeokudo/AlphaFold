@@ -3,7 +3,7 @@
 {% block content%}
 <div class="row">
     <div class="col-md-6">
-        <h2>Create Patient</h2>
+        <h2>Create Admin</h2>
         <form method="POST">
             {{ form.hidden_tag() }}
             <div class="form-group">
@@ -23,18 +23,6 @@
                 {{ form.phone_number(class='form-control') }}
             </div>
             <div class="form-group">
-                {{ form.date_of_birth.label(class='form-label') }}
-                {{ form.date_of_birth(class='form-control') }}
-            </div>
-            <div class="form-group">
-                {{ form.gender.label(class='form-label') }}
-                {{ form.gender(class='form-control') }}
-            </div>
-            <div class="form-group">
-                {{ form.address.label(class='form-label') }}
-                {{ form.address(class='form-control') }}
-            </div>
-                        <div class="form-group">
                 {{ form.password.label(class='form-label') }}
                 {{ form.password(class='form-control') }}
             </div>
@@ -56,11 +44,9 @@
                     </div>
                 {% endif %}
             {% endwith %}
-            <button type="submit" class="btn btn-success">Create Patient</button>
-            <a href="{{ url_for('admin.view_patients') }}" class="btn btn-warning">View Patients</a>
+            <button type="submit" class="btn btn-success">Create Admin</button>
+            <a href="{{ url_for('admin.view_admins') }}" class="btn btn-warning">View Admins</a>
         </form>
     </div>
 </div>
 {% endblock %}
-
-

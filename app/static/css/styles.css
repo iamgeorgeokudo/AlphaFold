@@ -2,13 +2,15 @@
 .navbar {
     margin-bottom: 20px;
 }
+
 .navbar-expand-lg {
     margin-bottom: 5px;
 }
 
 .navbar-nav .nav-link {
-    font-size: 14px; /* Adjust the font size here */
+    font-size: 14px;
 }
+
 .footer {
     margin-top: 20px;
     bottom: 0;
@@ -16,5 +18,5 @@
     background-color: #343a40;
     color: #fff;
     text-align: center;
-    font-size: 14px; /* Adjust the font size here */
+    font-size: 14px;
 }

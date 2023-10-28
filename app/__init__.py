@@ -1,20 +1,19 @@
 # Application factory function / application package constructor
-from flask import Flask, render_template
+from flask import Flask
 from flask_bootstrap import Bootstrap
+from flask_login import LoginManager
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
-from config import config
-from flask_login import LoginManager
-from flask import jsonify
 
+from config import config
 
 bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login', 'admin.login'
+login_manager.login_view = 'auth.login'
 
 
 def create_app(config_name):
@@ -28,8 +27,7 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
 
-    # attach routes and custom error pages here
-    # this is the main blueprint registration with the application
+    # main blueprint registration with the application
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
@@ -37,7 +35,8 @@ def create_app(config_name):
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
-    # the admin blueprint registration with the application
+    # admin blueprint registration with the application
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+
     return app

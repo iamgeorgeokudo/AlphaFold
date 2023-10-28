@@ -1,0 +1,32 @@
+{% extends 'admins/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h4 class="my-2">View Admins</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for admin in admins_data %}
+                <tr>
+                    <td>{{ admin.fullname }}</td>
+                    <td>{{ admin.email }}</td>
+                    <td>{{ admin.phone_number }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.view_admins', admin_id=admin.id) }}" class="btn btn-primary btn-sm">Edit</a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('admin.view_admins', admin_id=admin.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

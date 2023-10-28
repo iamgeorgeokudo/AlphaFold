@@ -1,8 +1,8 @@
-"""empty message
+"""create models
 
-Revision ID: 613bb1296df3
+Revision ID: 28d3e5b843f3
 Revises: 
-Create Date: 2023-10-15 20:08:37.358171
+Create Date: 2023-10-27 16:35:04.771000
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '613bb1296df3'
+revision = '28d3e5b843f3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,7 +27,9 @@ def upgrade():
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=20), nullable=False),
+    sa.Column('fullname', sa.String(length=32), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
+    sa.Column('phone_number', sa.String(length=20), nullable=True),
     sa.Column('password_hash', sa.String(length=60), nullable=False),
     sa.Column('role_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['role_id'], ['roles.id'], ),
@@ -35,21 +37,15 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
-    op.create_table('admins',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('full_name', sa.String(length=120), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('user_id')
-    )
+    with op.batch_alter_table('users', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_users_fullname'), ['fullname'], unique=False)
+        batch_op.create_index(batch_op.f('ix_users_phone_number'), ['phone_number'], unique=False)
+
     op.create_table('doctors',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('full_name', sa.String(length=120), nullable=False),
     sa.Column('specialization', sa.String(length=120), nullable=False),
     sa.Column('hospital_affiliation', sa.String(length=120), nullable=False),
-    sa.Column('phone_number', sa.String(length=20), nullable=False),
     sa.Column('license_number', sa.String(length=20), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -59,11 +55,9 @@ def upgrade():
     op.create_table('patients',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('fullname', sa.String(length=120), nullable=False),
     sa.Column('date_of_birth', sa.Date(), nullable=False),
     sa.Column('gender', sa.String(length=10), nullable=False),
     sa.Column('address', sa.String(length=120), nullable=False),
-    sa.Column('phone_number', sa.String(length=20), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id')
@@ -116,7 +110,10 @@ def downgrade():
     op.drop_table('appointments')
     op.drop_table('patients')
     op.drop_table('doctors')
-    op.drop_table('admins')
+    with op.batch_alter_table('users', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_users_phone_number'))
+        batch_op.drop_index(batch_op.f('ix_users_fullname'))
+
     op.drop_table('users')
     op.drop_table('roles')
     # ### end Alembic commands ###
